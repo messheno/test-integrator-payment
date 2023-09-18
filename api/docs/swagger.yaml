@@ -1,0 +1,79 @@
+basePath: /
+host: core-api.Integrator.com
+info:
+  contact:
+    email: support@Integrator.com
+    name: API Support
+    url: https://www.Integrator.com/support
+  description: API Core.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://www.integrator.com/terms
+  title: Integrator Core API
+  version: 0.0.1
+paths:
+  /api/init:
+    post:
+      description: Lancer l'initialisation de l'application
+      responses: {}
+      summary: Initialisation de l'application
+      tags:
+      - app
+  /api/users/:
+    get:
+      consumes:
+      - multipart/form-data
+      description: Recuperation de tous les utilisateurs
+      responses: {}
+      summary: APIGetAll
+      tags:
+      - users
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creation d'un nouvel utilisateur
+      responses: {}
+      summary: APICreate
+      tags:
+      - users
+  /api/users/:id:
+    delete:
+      consumes:
+      - multipart/form-data
+      description: Suppression d'un utilisateur
+      responses: {}
+      summary: APIDelete
+      tags:
+      - users
+    get:
+      consumes:
+      - multipart/form-data
+      description: Lecture des informations d'un utilisateur
+      responses: {}
+      summary: APIRead
+      tags:
+      - users
+    put:
+      consumes:
+      - multipart/form-data
+      description: Mise à jours des informations d'un utilisateur
+      responses: {}
+      summary: APIUpdate
+      tags:
+      - users
+  /api/users/login:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Connexion
+      responses: {}
+      summary: APILogin
+      tags:
+      - users
+securityDefinitions:
+  "":
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

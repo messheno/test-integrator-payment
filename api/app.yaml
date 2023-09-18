@@ -1,0 +1,9 @@
+PORT_API: 3000
+
+DB_TYPE: 4
+DB_HOST: localhost
+DB_PORT: 3306
+DB_NAME: kmdm
+DB_USER: kmdm
+DB_PASSWORD: kmdm
+DB_PATH: "./db/integrator.db"

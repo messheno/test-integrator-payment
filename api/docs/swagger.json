@@ -1,0 +1,111 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Core.",
+        "title": "Integrator Core API",
+        "termsOfService": "https://www.integrator.com/terms",
+        "contact": {
+            "name": "API Support",
+            "url": "https://www.Integrator.com/support",
+            "email": "support@Integrator.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.0.1"
+    },
+    "host": "core-api.Integrator.com",
+    "basePath": "/",
+    "paths": {
+        "/api/init": {
+            "post": {
+                "description": "Lancer l'initialisation de l'application",
+                "tags": [
+                    "app"
+                ],
+                "summary": "Initialisation de l'application",
+                "responses": {}
+            }
+        },
+        "/api/users/": {
+            "get": {
+                "description": "Recuperation de tous les utilisateurs",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APIGetAll",
+                "responses": {}
+            },
+            "post": {
+                "description": "Creation d'un nouvel utilisateur",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APICreate",
+                "responses": {}
+            }
+        },
+        "/api/users/:id": {
+            "get": {
+                "description": "Lecture des informations d'un utilisateur",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APIRead",
+                "responses": {}
+            },
+            "put": {
+                "description": "Mise à jours des informations d'un utilisateur",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APIUpdate",
+                "responses": {}
+            },
+            "delete": {
+                "description": "Suppression d'un utilisateur",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APIDelete",
+                "responses": {}
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "description": "Connexion",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "APILogin",
+                "responses": {}
+            }
+        }
+    },
+    "securityDefinitions": {
+        "": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
