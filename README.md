@@ -72,7 +72,11 @@ A savoir: les exigences fonctionnelles et les exigences non fonctionnelles.
 
 # Architecture
 
-Cette architecture est basée sur les exigences fournies precedement et suppose que nous utilisons une architecture web moderne.
+Cette architecture est basée sur les exigences fournies precedement et suppose que nous utilisons une architecture web moderne. Pour cette demo nous allons utilisé ces technologie:
+- Golang (API)
+- ReactJs (Frontend)
+- PostgreSQL (Base de donnée)
+- Keycloak envisager mais pas utilisé pour cette demo (Système de gestion d'identité et d'accès)
 
 ## Architecture technique
 
@@ -111,6 +115,11 @@ Cette architecture est basée sur les exigences fournies precedement et suppose 
     - L'API Go effectue des vérifications d'authentification et d'autorisation pour les applications externes.
 
 # Developpement
+Les code sources:
+    - API (./api)
+    - FrontEnd (./front-end)
+
+Chaque dossier contient un fichier dockerfile et docker-compose pour la contenerisation.
 
 # Formation et transfert de compétence
 
