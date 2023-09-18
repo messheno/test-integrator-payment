@@ -116,8 +116,8 @@ Cette architecture est basée sur les exigences fournies precedement et suppose 
 
 # Developpement
 Les code sources:
-    - API (./api)
-    - FrontEnd (./front-end)
+- API (./api)
+- FrontEnd (./front-end)
 
 Chaque dossier contient un fichier dockerfile et docker-compose pour la contenerisation.
 
