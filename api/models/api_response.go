@@ -3,8 +3,6 @@ package models
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -33,7 +31,6 @@ func (m ResErrorAPI) Error() string {
 }
 
 type ResponseAPI[T any] struct {
-	UrlPath string `json:"url_path"`
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 
@@ -77,7 +74,6 @@ func (resp *ResponseAPI[T]) SetErrors(errors T) {
 }
 
 func (resp *ResponseAPI[T]) Send(c echo.Context) error {
-	resp.UrlPath = c.Request().URL.Path
 	resp.Status = http.StatusOK
 	resp.TimeElapsed = time.Since(resp.startTime).String()
 
@@ -120,86 +116,4 @@ func TransformErr(err error) ResErrorAPI {
 			Data:    err,
 		},
 	}
-}
-
-// PaginationModel n
-type PaginationModel struct {
-	Count     int64    `json:"count"`
-	Sorts     []string `json:"sorts,omitempty"`
-	Page      int      `json:"page,omitempty"`
-	PageCount int      `json:"page_count,omitempty"`
-	Query     string   `json:"query,omitempty"`
-	Limit     int      `json:"limit"`
-	Offset    int      `json:"offset,omitempty"`
-	// Contents  interface{} `json:"contents"`
-}
-
-// PaginationMid middleware de gestion de pagination
-func PaginationMid() func(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			resp, ok := c.Get("RESP").(*ResponseAPI[interface{}])
-			if !ok {
-				resp = NewResponseAPI[interface{}]()
-			}
-
-			var limit = 10
-			var offset = 1
-			query := c.QueryParam("query")
-
-			// Limit
-			if c.QueryParam("limit") != "" {
-				limit, _ = strconv.Atoi(c.QueryParam("limit"))
-			}
-
-			// Page
-			if c.QueryParam("page") != "" {
-				offset, _ = strconv.Atoi(c.QueryParam("page"))
-			}
-
-			// Sorts
-			orders := orderString(c.QueryParam("sorts"))
-
-			if offset <= 0 {
-				offset = 1
-			}
-
-			offset = limit * (offset - 1)
-
-			c.Set("LIMIT", limit)
-			c.Set("OFFSET", offset)
-			c.Set("QUERY", query)
-			c.Set("ORDERS", orders)
-
-			if err := next(c); err != nil {
-				return resp.SendError(c, "Une erreur c'est produite", []ErrorAPI{
-					{
-						Code:    "400",
-						Message: err.Error(),
-						Data:    err,
-					},
-				})
-			}
-
-			return nil
-		}
-	}
-}
-
-func orderString(sortQuery string) []string {
-	sorts := strings.Split(sortQuery, ",")
-	var orders []string
-	for _, sort := range sorts {
-		srt := strings.Split(strings.Trim(sort, " "), " ")
-
-		if len(srt) == 2 && (strings.ToLower(srt[1]) == "asc" || strings.ToLower(srt[1]) == "desc") {
-			orders = append(orders, fmt.Sprintf("%v %v", srt[0], strings.ToLower(srt[1])))
-		}
-	}
-
-	if len(orders) <= 0 {
-		orders = []string{}
-	}
-
-	return orders
 }

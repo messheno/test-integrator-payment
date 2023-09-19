@@ -1,76 +1,924 @@
 basePath: /
-host: core-api.Integrator.com
+definitions:
+  models.ErrorAPI:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        type: string
+    type: object
+  models.PaginationModel:
+    properties:
+      count:
+        type: integer
+      limit:
+        type: integer
+      offset:
+        type: integer
+      page:
+        type: integer
+      page_count:
+        type: integer
+      query:
+        type: string
+      sorts:
+        items:
+          type: string
+        type: array
+    type: object
+  models.ProviderModel:
+    properties:
+      asynchrone_mode:
+        type: boolean
+      created_at:
+        type: string
+      description:
+        type: string
+      health_url:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      name_slug:
+        type: string
+      pay_check_url:
+        type: string
+      pay_url:
+        type: string
+      support_country:
+        description: CIV
+        items:
+          type: string
+        type: array
+      transactions:
+        items:
+          $ref: '#/definitions/models.TransactionModel'
+        type: array
+      updated_at:
+        type: string
+    required:
+    - description
+    - health_url
+    - name
+    - pay_check_url
+    - pay_url
+    - support_country
+    type: object
+  models.ResFailure:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.ErrorAPI'
+        type: array
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  models.ShopModel:
+    properties:
+      amount:
+        type: number
+      country:
+        type: string
+      created_at:
+        type: string
+      current_amount:
+        type: number
+      description:
+        type: string
+      id:
+        type: string
+      logo:
+        type: string
+      name:
+        type: string
+      name_slug:
+        type: string
+      permissions:
+        description: Liste de permission des utilisateurs
+        items:
+          $ref: '#/definitions/models.ShopPermissionModel'
+        type: array
+      site_web:
+        type: string
+      transactions:
+        description: Liste des transaction
+        items:
+          $ref: '#/definitions/models.TransactionModel'
+        type: array
+      updated_at:
+        type: string
+    required:
+    - description
+    - name
+    type: object
+  models.ShopPermissionModel:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      role:
+        type: integer
+      shop:
+        $ref: '#/definitions/models.ShopModel'
+      shop_id:
+        description: Shop
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.UserModel'
+      user_id:
+        description: User
+        type: string
+    required:
+    - role
+    type: object
+  models.TransactionModel:
+    properties:
+      amount:
+        type: number
+      amount_with_fee:
+        type: number
+      created_at:
+        type: string
+      currency:
+        type: string
+      id:
+        type: string
+      mode_live:
+        type: boolean
+      operation_mode:
+        description: CREDIT, DEBIT
+        type: string
+      operation_msg:
+        type: string
+      operation_state:
+        description: PENDING, SUCCESS, CANCEL, FAIL
+        type: string
+      provider:
+        $ref: '#/definitions/models.ProviderModel'
+      provider_id:
+        description: Provider
+        type: string
+      reference_id:
+        description: Réference
+        type: string
+      shop:
+        $ref: '#/definitions/models.ShopModel'
+      shop_id:
+        description: Shop
+        type: string
+      updated_at:
+        type: string
+    required:
+    - amount
+    - amount_with_fee
+    - currency
+    - operation_mode
+    - operation_state
+    - provider
+    - provider_id
+    - reference_id
+    - shop
+    - shop_id
+    type: object
+  models.UserModel:
+    properties:
+      auth_id:
+        description: Identifiant unique keycloak
+        type: string
+      country:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        description: Information
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      phone_prefix:
+        type: string
+      role:
+        description: Role
+        type: integer
+      shop_permissions:
+        items:
+          $ref: '#/definitions/models.ShopPermissionModel'
+        type: array
+      updated_at:
+        type: string
+    required:
+    - auth_id
+    - first_name
+    - last_name
+    type: object
+  shops.ResShopAPICreateSuccess:
+    properties:
+      data:
+        properties:
+          shop:
+            $ref: '#/definitions/models.ShopModel'
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIDeleteSuccess:
+    properties:
+      data:
+        properties:
+          deleted:
+            type: boolean
+          shop:
+            $ref: '#/definitions/models.ShopModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIFetchSuccess:
+    properties:
+      data:
+        properties:
+          pagination:
+            $ref: '#/definitions/models.PaginationModel'
+          shops:
+            items:
+              $ref: '#/definitions/models.ShopModel'
+            type: array
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIGenClientSuccess:
+    properties:
+      data:
+        properties:
+          client_id:
+            type: string
+          client_key:
+            type: string
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIGetClientSuccess:
+    properties:
+      data:
+        properties:
+          client_id:
+            type: string
+          client_key:
+            type: string
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIGetSuccess:
+    properties:
+      data:
+        properties:
+          shop:
+            $ref: '#/definitions/models.ShopModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopAPIUpdateSuccess:
+    properties:
+      data:
+        properties:
+          shop:
+            $ref: '#/definitions/models.ShopModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopPermissionAPIAddSuccess:
+    properties:
+      data:
+        properties:
+          shop:
+            $ref: '#/definitions/models.ShopModel'
+          shop_permission:
+            $ref: '#/definitions/models.ShopPermissionModel'
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  shops.ResShopPermissionAPIFetchSuccess:
+    properties:
+      data:
+        properties:
+          shop_permissions:
+            items:
+              $ref: '#/definitions/models.ShopPermissionModel'
+            type: array
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPICreateSuccess:
+    properties:
+      data:
+        properties:
+          refresh_token:
+            type: string
+          token:
+            type: string
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPIFetchSuccess:
+    properties:
+      data:
+        properties:
+          pagination:
+            $ref: '#/definitions/models.PaginationModel'
+          users:
+            items:
+              $ref: '#/definitions/models.UserModel'
+            type: array
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPIGetSuccess:
+    properties:
+      data:
+        properties:
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPILoginSuccess:
+    properties:
+      data:
+        properties:
+          refresh_token:
+            type: string
+          token:
+            type: string
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPIRoleSuccess:
+    properties:
+      data:
+        properties:
+          new_role:
+            type: string
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  users.ResUserAPIUpdateSuccess:
+    properties:
+      data:
+        properties:
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+host: spay.sikem.ci
 info:
   contact:
-    email: support@Integrator.com
+    email: support@sikem.ci
     name: API Support
-    url: https://www.Integrator.com/support
-  description: API Core.
+    url: http://www.sikem.ci/support
+  description: API de paiement.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://www.integrator.com/terms
-  title: Integrator Core API
-  version: 0.0.1
+  termsOfService: http://www.sikem.ci/terms/
+  title: Sikem Payment API
+  version: 0.0.2
 paths:
-  /api/init:
-    post:
-      description: Lancer l'initialisation de l'application
-      responses: {}
-      summary: Initialisation de l'application
-      tags:
-      - app
-  /api/users/:
+  /api/shops/:
     get:
-      consumes:
-      - multipart/form-data
-      description: Recuperation de tous les utilisateurs
-      responses: {}
-      summary: APIGetAll
+      description: Récuperation des boutiques paginer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPIFetchSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Fetch all shop paginate
       tags:
-      - users
+      - Users
     post:
       consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
       - multipart/form-data
-      description: Creation d'un nouvel utilisateur
-      responses: {}
-      summary: APICreate
+      description: Création d'un nouvel utilisateur
+      parameters:
+      - description: Id d'authentification de l'admin de la boutique
+        in: formData
+        name: auth_id
+        type: string
+      - description: 'Pays (ex: civ)'
+        in: formData
+        name: country
+        type: string
+      - description: Une courte description de la boutiuque
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Nom de la boutique
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: 'Site web (ex: https://www.maboutique.ci)'
+        in: formData
+        name: site_web
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPICreateSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Add new shop
       tags:
-      - users
-  /api/users/:id:
+      - Shops
+  /api/shops/:id/:
     delete:
-      consumes:
-      - multipart/form-data
-      description: Suppression d'un utilisateur
-      responses: {}
-      summary: APIDelete
+      description: Suppression de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPIDeleteSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Delete shop
       tags:
-      - users
+      - Shops
     get:
-      consumes:
-      - multipart/form-data
-      description: Lecture des informations d'un utilisateur
-      responses: {}
-      summary: APIRead
+      description: Récuperation des informations de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPIGetSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Get shop data
       tags:
-      - users
+      - Shops
     put:
       consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
       - multipart/form-data
-      description: Mise à jours des informations d'un utilisateur
-      responses: {}
-      summary: APIUpdate
+      description: Mise à jour des données de la boutique
+      parameters:
+      - description: 'Pays (ex: civ)'
+        in: formData
+        name: country
+        type: string
+      - description: Une courte description de la boutiuque
+        in: formData
+        name: description
+        type: string
+      - description: Nom de la boutique
+        in: formData
+        name: name
+        type: string
+      - description: 'Site web (ex: https://www.maboutique.ci)'
+        in: formData
+        name: site_web
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPIUpdateSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: UpdateInfo shop information
       tags:
-      - users
+      - Shops
+  /api/shops/:id/permissions/:
+    get:
+      description: Récuperation des permissions de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopPermissionAPIFetchSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Fetch shop permissions
+      tags:
+      - Shop Permissions
+  /api/shops/:id/permissions/add:
+    post:
+      description: Récuperation des permissions de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopPermissionAPIAddSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Add user to shop
+      tags:
+      - Ajout d'un utilisateurs à la boutique
+  /api/shops/:id/regenerate-client:
+    post:
+      description: Régéneration du client de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPIGenClientSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Regeneration Client shop data
+      tags:
+      - Shops
+  /api/shops/:id/show-client:
+    get:
+      description: Récuperation des informations client de la boutique
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shops.ResShopAPIGetClientSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Get Client shop data
+      tags:
+      - Shops
+  /api/users/:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
+      - multipart/form-data
+      description: Création d'un nouvel utilisateur
+      parameters:
+      - description: 'Pays (ex: civ)'
+        in: formData
+        name: country
+        type: string
+      - description: Adresse e-mail valide
+        in: formData
+        name: email
+        type: string
+      - description: Prénoms
+        in: formData
+        name: first_name
+        required: true
+        type: string
+      - description: Nom
+        in: formData
+        name: last_name
+        required: true
+        type: string
+      - description: Mot de passe
+        in: formData
+        maxLength: 18
+        minLength: 4
+        name: password
+        required: true
+        type: string
+      - description: Confirmation du mot de passe
+        in: formData
+        name: password_confirmation
+        required: true
+        type: string
+      - description: Numéro de mobile
+        in: formData
+        name: phone_number
+        required: true
+        type: string
+      - description: 'Prefix téléphonique (ex: 225)'
+        in: formData
+        name: phone_prefix
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPICreateSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Add new user
+      tags:
+      - Users
+  /api/users/:id:
+    get:
+      description: Récuperation des informations de l'utilisateur
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPIGetSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Get user data
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
+      - multipart/form-data
+      description: Mise à jour des données de l'utilisateur
+      parameters:
+      - description: Appliquer la mise à jour au système complet
+        in: formData
+        name: apply_for_all_system
+        type: boolean
+      - description: 'Pays (ex: civ)'
+        in: formData
+        name: country
+        type: string
+      - description: Adresse e-mail valide
+        in: formData
+        name: email
+        type: string
+      - description: Prénoms
+        in: formData
+        name: first_name
+        type: string
+      - description: Nom
+        in: formData
+        name: last_name
+        type: string
+      - description: Numéro de mobile
+        in: formData
+        name: phone_number
+        type: string
+      - description: 'Prefix téléphonique (ex: 225)'
+        in: formData
+        name: phone_prefix
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPIUpdateSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: UpdateInfo user information
+      tags:
+      - Users
+  /api/users/change-role:
+    post:
+      consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
+      - multipart/form-data
+      description: Changement de la permission de l'utilisateur
+      parameters:
+      - description: Identifiant de connexion de l'utilisateur
+        in: formData
+        name: auth_id
+        required: true
+        type: string
+      - description: '0: Merchant, 1: Manager, 2: Admin'
+        in: formData
+        maximum: 2
+        minimum: 0
+        name: role
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPIRoleSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      security:
+      - ApiKeyAuth: []
+      summary: Change user role
+      tags:
+      - Users
   /api/users/login:
     post:
       consumes:
+      - application/json
+      - text/xml
+      - application/x-www-form-urlencoded
       - multipart/form-data
-      description: Connexion
-      responses: {}
-      summary: APILogin
+      description: Connexion d'un utilisateur
+      parameters:
+      - description: Mot de passe
+        in: formData
+        maxLength: 18
+        minLength: 4
+        name: password
+        required: true
+        type: string
+      - description: User name
+        in: formData
+        name: username
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.ResUserAPILoginSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Login user
       tags:
-      - users
+      - Users
 securityDefinitions:
   "":
     in: header

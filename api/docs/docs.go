@@ -10,11 +10,11 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "https://www.integrator.com/terms",
+        "termsOfService": "http://www.sikem.ci/terms/",
         "contact": {
             "name": "API Support",
-            "url": "https://www.Integrator.com/support",
-            "email": "support@Integrator.com"
+            "url": "http://www.sikem.ci/support",
+            "email": "support@sikem.ci"
         },
         "license": {
             "name": "Apache 2.0",
@@ -25,86 +25,1359 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/init": {
-            "post": {
-                "description": "Lancer l'initialisation de l'application",
+        "/api/shops/": {
+            "get": {
+                "description": "Récuperation des boutiques paginer",
                 "tags": [
-                    "app"
+                    "Users"
                 ],
-                "summary": "Initialisation de l'application",
-                "responses": {}
+                "summary": "Fetch all shop paginate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPIFetchSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Création d'un nouvel utilisateur",
+                "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Add new shop",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id d'authentification de l'admin de la boutique",
+                        "name": "auth_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pays (ex: civ)",
+                        "name": "country",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Une courte description de la boutiuque",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nom de la boutique",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Site web (ex: https://www.maboutique.ci)",
+                        "name": "site_web",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPICreateSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shops/:id/": {
+            "get": {
+                "description": "Récuperation des informations de la boutique",
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Get shop data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPIGetSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Mise à jour des données de la boutique",
+                "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "UpdateInfo shop information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pays (ex: civ)",
+                        "name": "country",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Une courte description de la boutiuque",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nom de la boutique",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Site web (ex: https://www.maboutique.ci)",
+                        "name": "site_web",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPIUpdateSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Suppression de la boutique",
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Delete shop",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPIDeleteSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shops/:id/permissions/": {
+            "get": {
+                "description": "Récuperation des permissions de la boutique",
+                "tags": [
+                    "Shop Permissions"
+                ],
+                "summary": "Fetch shop permissions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopPermissionAPIFetchSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shops/:id/permissions/add": {
+            "post": {
+                "description": "Récuperation des permissions de la boutique",
+                "tags": [
+                    "Ajout d'un utilisateurs à la boutique"
+                ],
+                "summary": "Add user to shop",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopPermissionAPIAddSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shops/:id/regenerate-client": {
+            "post": {
+                "description": "Régéneration du client de la boutique",
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Regeneration Client shop data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPIGenClientSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shops/:id/show-client": {
+            "get": {
+                "description": "Récuperation des informations client de la boutique",
+                "tags": [
+                    "Shops"
+                ],
+                "summary": "Get Client shop data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/shops.ResShopAPIGetClientSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
             }
         },
         "/api/users/": {
-            "get": {
-                "description": "Recuperation de tous les utilisateurs",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "APIGetAll",
-                "responses": {}
-            },
             "post": {
-                "description": "Creation d'un nouvel utilisateur",
+                "description": "Création d'un nouvel utilisateur",
                 "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "APICreate",
-                "responses": {}
+                "summary": "Add new user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pays (ex: civ)",
+                        "name": "country",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Adresse e-mail valide",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Prénoms",
+                        "name": "first_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nom",
+                        "name": "last_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 18,
+                        "minLength": 4,
+                        "type": "string",
+                        "description": "Mot de passe",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Confirmation du mot de passe",
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Numéro de mobile",
+                        "name": "phone_number",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Prefix téléphonique (ex: 225)",
+                        "name": "phone_prefix",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPICreateSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
             }
         },
         "/api/users/:id": {
             "get": {
-                "description": "Lecture des informations d'un utilisateur",
-                "consumes": [
-                    "multipart/form-data"
-                ],
+                "description": "Récuperation des informations de l'utilisateur",
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "APIRead",
-                "responses": {}
+                "summary": "Get user data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPIGetSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
             },
             "put": {
-                "description": "Mise à jours des informations d'un utilisateur",
+                "description": "Mise à jour des données de l'utilisateur",
                 "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "APIUpdate",
-                "responses": {}
-            },
-            "delete": {
-                "description": "Suppression d'un utilisateur",
+                "summary": "UpdateInfo user information",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Appliquer la mise à jour au système complet",
+                        "name": "apply_for_all_system",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pays (ex: civ)",
+                        "name": "country",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Adresse e-mail valide",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Prénoms",
+                        "name": "first_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nom",
+                        "name": "last_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Numéro de mobile",
+                        "name": "phone_number",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Prefix téléphonique (ex: 225)",
+                        "name": "phone_prefix",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPIUpdateSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/change-role": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Changement de la permission de l'utilisateur",
                 "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "APIDelete",
-                "responses": {}
+                "summary": "Change user role",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Identifiant de connexion de l'utilisateur",
+                        "name": "auth_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maximum": 2,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "0: Merchant, 1: Manager, 2: Admin",
+                        "name": "role",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPIRoleSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
             }
         },
         "/api/users/login": {
             "post": {
-                "description": "Connexion",
+                "description": "Connexion d'un utilisateur",
                 "consumes": [
+                    "application/json",
+                    "text/xml",
+                    "application/x-www-form-urlencoded",
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "APILogin",
-                "responses": {}
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "maxLength": 18,
+                        "minLength": 4,
+                        "type": "string",
+                        "description": "Mot de passe",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User name",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.ResUserAPILoginSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.ErrorAPI": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PaginationModel": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "page_count": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "sorts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "models.ProviderModel": {
+            "type": "object",
+            "required": [
+                "description",
+                "health_url",
+                "name",
+                "pay_check_url",
+                "pay_url",
+                "support_country"
+            ],
+            "properties": {
+                "asynchrone_mode": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "health_url": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "name_slug": {
+                    "type": "string"
+                },
+                "pay_check_url": {
+                    "type": "string"
+                },
+                "pay_url": {
+                    "type": "string"
+                },
+                "support_country": {
+                    "description": "CIV",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TransactionModel"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResFailure": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ErrorAPI"
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ShopModel": {
+            "type": "object",
+            "required": [
+                "description",
+                "name"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "current_amount": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "logo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "name_slug": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "description": "Liste de permission des utilisateurs",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ShopPermissionModel"
+                    }
+                },
+                "site_web": {
+                    "type": "string"
+                },
+                "transactions": {
+                    "description": "Liste des transaction",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TransactionModel"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ShopPermissionModel": {
+            "type": "object",
+            "required": [
+                "role"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "integer"
+                },
+                "shop": {
+                    "$ref": "#/definitions/models.ShopModel"
+                },
+                "shop_id": {
+                    "description": "Shop",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserModel"
+                },
+                "user_id": {
+                    "description": "User",
+                    "type": "string"
+                }
+            }
+        },
+        "models.TransactionModel": {
+            "type": "object",
+            "required": [
+                "amount",
+                "amount_with_fee",
+                "currency",
+                "operation_mode",
+                "operation_state",
+                "provider",
+                "provider_id",
+                "reference_id",
+                "shop",
+                "shop_id"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "amount_with_fee": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mode_live": {
+                    "type": "boolean"
+                },
+                "operation_mode": {
+                    "description": "CREDIT, DEBIT",
+                    "type": "string"
+                },
+                "operation_msg": {
+                    "type": "string"
+                },
+                "operation_state": {
+                    "description": "PENDING, SUCCESS, CANCEL, FAIL",
+                    "type": "string"
+                },
+                "provider": {
+                    "$ref": "#/definitions/models.ProviderModel"
+                },
+                "provider_id": {
+                    "description": "Provider",
+                    "type": "string"
+                },
+                "reference_id": {
+                    "description": "Réference",
+                    "type": "string"
+                },
+                "shop": {
+                    "$ref": "#/definitions/models.ShopModel"
+                },
+                "shop_id": {
+                    "description": "Shop",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserModel": {
+            "type": "object",
+            "required": [
+                "auth_id",
+                "first_name",
+                "last_name"
+            ],
+            "properties": {
+                "auth_id": {
+                    "description": "Identifiant unique keycloak",
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "description": "Information",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "phone_prefix": {
+                    "type": "string"
+                },
+                "role": {
+                    "description": "Role",
+                    "type": "integer"
+                },
+                "shop_permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ShopPermissionModel"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPICreateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "shop": {
+                            "$ref": "#/definitions/models.ShopModel"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIDeleteSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "deleted": {
+                            "type": "boolean"
+                        },
+                        "shop": {
+                            "$ref": "#/definitions/models.ShopModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIFetchSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "pagination": {
+                            "$ref": "#/definitions/models.PaginationModel"
+                        },
+                        "shops": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ShopModel"
+                            }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIGenClientSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "client_id": {
+                            "type": "string"
+                        },
+                        "client_key": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIGetClientSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "client_id": {
+                            "type": "string"
+                        },
+                        "client_key": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIGetSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "shop": {
+                            "$ref": "#/definitions/models.ShopModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopAPIUpdateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "shop": {
+                            "$ref": "#/definitions/models.ShopModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopPermissionAPIAddSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "shop": {
+                            "$ref": "#/definitions/models.ShopModel"
+                        },
+                        "shop_permission": {
+                            "$ref": "#/definitions/models.ShopPermissionModel"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "shops.ResShopPermissionAPIFetchSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "shop_permissions": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ShopPermissionModel"
+                            }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPICreateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "refresh_token": {
+                            "type": "string"
+                        },
+                        "token": {
+                            "type": "string"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPIFetchSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "pagination": {
+                            "$ref": "#/definitions/models.PaginationModel"
+                        },
+                        "users": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.UserModel"
+                            }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPIGetSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPILoginSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "refresh_token": {
+                            "type": "string"
+                        },
+                        "token": {
+                            "type": "string"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPIRoleSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "new_role": {
+                            "type": "string"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "users.ResUserAPIUpdateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
             }
         }
     },
@@ -119,12 +1392,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.0.1",
-	Host:             "core-api.Integrator.com",
+	Version:          "0.0.2",
+	Host:             "spay.sikem.ci",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Integrator Core API",
-	Description:      "API Core.",
+	Title:            "Sikem Payment API",
+	Description:      "API de paiement.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

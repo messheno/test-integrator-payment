@@ -3,44 +3,33 @@ package main
 import (
 	"context"
 	"fmt"
-	"integrator/endpoints"
-	"integrator/models"
-	"integrator/utils"
-	"log"
 	"os"
 	"os/signal"
-	"path"
+	"spay/endpoints/api"
+	"spay/models"
+	"spay/utils"
 	"syscall"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
-	"gorm.io/driver/sqlserver"
-	"gorm.io/gorm"
-
-	_ "integrator/docs" // Document Swagger
-
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-const serviceName = "integrator-core"
+const serviceName = "quantech-payment"
 
-// @title Integrator Core API
-// @version 0.0.1
-// @description API Core.
-// @termsOfService https://www.integrator.com/terms
+// @title Sikem Payment API
+// @version 0.0.2
+// @description API de paiement.
+// @termsOfService http://www.sikem.ci/terms/
 
 // @contact.name API Support
-// @contact.url https://www.Integrator.com/support
-// @contact.email support@Integrator.com
+// @contact.url http://www.sikem.ci/support
+// @contact.email support@sikem.ci
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host core-api.Integrator.com
+// @host spay.sikem.ci
 // @BasePath /
 
 // @securityDefinitions.apikey
@@ -48,11 +37,11 @@ const serviceName = "integrator-core"
 // @name Authorization
 func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	coreLog := utils.NewLog(serviceName).With().Logger()
+	npLog := utils.NewLog(serviceName).With().Logger()
 
 	config, err := models.LoadConfig()
 	if err != nil {
-		coreLog.Fatal().Stack().Err(err).Str("service", serviceName).Msgf("cannot load config %s", serviceName)
+		npLog.Fatal().Stack().Err(err).Str("service", serviceName).Msgf("cannot load config %s", serviceName)
 	}
 
 	errChan := make(chan error)
@@ -63,53 +52,14 @@ func main() {
 
 	// HTTP
 	go func(port string) {
-		// Test de connexion
-		dsn := ""
-		var db *gorm.DB
-		var err error
-		debug := true
-
-		// Chargement du fichier de configuration crypté
 		config, err := models.LoadConfig()
-		if err != nil {
-			log.Fatal("Impossible de charger le fichier de configuration")
-			return
-		}
-
-		switch config.DBType {
-		case int32(models.DB_TYPE_POSTGRESQL.EnumIndex()):
-			dsn = fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable", config.DBHost, config.DBUser, config.DBPass, config.DBName, config.DBPort)
-			db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-				DisableForeignKeyConstraintWhenMigrating: debug,
-			})
-		case int32(models.DB_TYPE_MYSQL.EnumIndex()):
-			dsn = fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", config.DBUser, config.DBPass, config.DBHost, config.DBPort, config.DBName)
-			db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-				DisableForeignKeyConstraintWhenMigrating: debug,
-			})
-		case int32(models.DB_TYPE_SQLSERVER.EnumIndex()):
-			dsn = fmt.Sprintf("sqlserver://%v:%v@%v:%v?database=%v", config.DBUser, config.DBPass, config.DBHost, config.DBPort, config.DBName)
-			db, err = gorm.Open(sqlserver.Open(dsn), &gorm.Config{
-				DisableForeignKeyConstraintWhenMigrating: debug,
-			})
-		case int32(models.DB_TYPE_SQLITE.EnumIndex()):
-			dsn = config.DBPath
-
-			os.MkdirAll(path.Dir(dsn), os.ModePerm)
-
-			db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{
-				DisableForeignKeyConstraintWhenMigrating: debug,
-			})
-
-		default:
-			err = fmt.Errorf("drive inconnu %d", config.DBType)
-		}
-
 		if err == nil {
-			// Migrate the schema
-			err = models.CreateUpdateTable(db)
-			if err != nil {
-				coreLog.Error().Err(err).Msg(err.Error())
+			if config.DBInit {
+				db, err := models.GetDB()
+				if err == nil {
+					// models.DropTable(db)
+					models.CreateUpdateTable(db)
+				}
 			}
 		}
 
@@ -126,19 +76,17 @@ func main() {
 		// server.Pre(middleware.AddTrailingSlash())
 
 		server.Validator = models.NewCustomValidator()
-
-		// Documentation
-		server.GET("/docs/*", echoSwagger.WrapHandler)
+		//server.Binder = &models.CustomBinder{}
 
 		// Web site
 		// server.Static("/", "./assets/web")
 
-		endpoints.AttachAPI(server, db)
+		api.AttachAPI(server, &npLog)
 
-		coreLog.Info().Msgf("Create HTTP server in port%v", port)
+		npLog.Info().Msgf("Create HTTP server in port%v", port)
 		go func() {
 			if err := server.Start(port); err != nil {
-				coreLog.Error().Err(err).Msg("shutting down the server")
+				npLog.Error().Err(err).Msg("shutting down the server")
 				server.Logger.Info("shutting down the server")
 			}
 		}()
@@ -149,7 +97,7 @@ func main() {
 		signal.Notify(quit, os.Interrupt)
 		<-quit
 
-		ctx, cancel := context.WithTimeout(context.Background(), models.CONNECTION_TIMEOUT)
+		ctx, cancel := context.WithTimeout(context.Background(), models.ConnectTimeout)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
@@ -159,7 +107,7 @@ func main() {
 
 	select {
 	case err := <-errChan:
-		coreLog.Printf("Fatal error: %v\n", err)
+		npLog.Printf("Fatal error: %v\n", err)
 	case <-stopChan:
 	}
 }
