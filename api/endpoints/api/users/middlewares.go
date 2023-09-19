@@ -86,7 +86,7 @@ func getUser(userId string, claims jwt.MapClaims) (*models.UserModel, error) {
 	}
 
 	result := db.
-		Preload("ShopPermissions").
+		Preload("ServicePermissions").
 		Where(&user).
 		First(&user)
 	if result.Error != nil {

@@ -55,7 +55,7 @@ func (u *UserApiRessource) UpdateInfo() echo.HandlerFunc {
 			resp = models.NewResponseAPI[interface{}]()
 		}
 
-		claims, ok := c.Get("JWT_CLAIMS").(models.GrantedData)
+		claims, ok := c.Get("JWT_CLAIMS").(jwt.MapClaims)
 		if !ok {
 			err := fmt.Errorf("authentification obligatoire")
 			resp.SetStatus(http.StatusUnauthorized)
@@ -96,7 +96,7 @@ func (u *UserApiRessource) UpdateInfo() echo.HandlerFunc {
 			return resp.SendError(c, "Formulaire invalide", models.TransformErr(errorsApi))
 		}
 
-		err := checkForUpdateUser(claims.Claims, updateUser, *data, c)
+		err := checkForUpdateUser(claims, updateUser, *data, c)
 		if err != nil {
 			log.Error().Err(err).Msgf("")
 			return resp.SendError(c, err.Error(), models.TransformErr(err))
@@ -126,7 +126,7 @@ func checkForUpdateUser(claims jwt.MapClaims, updateUser *models.UserModel, data
 	}
 
 	result := db.
-		Preload("ShopPermissions").
+		Preload("ServicePermissions").
 		Where(&loginUser).First(&loginUser)
 	if result.Error != nil {
 		return result.Error

@@ -1,0 +1,108 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+
+    environment:
+      POSTGRES_DB: spay
+      POSTGRES_USER: spay
+      POSTGRES_PASSWORD: thesecret
+
+    ports:
+      - '5432:5432'
+    volumes:
+      - PG_DATA:/var/lib/postgresql/data
+
+    networks:
+      postgres-net:
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:80"
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: thesecret
+
+    volumes:
+      - PGADMIN_DATA:/var/lib/pgadmin
+
+    networks:
+      postgres-net:
+
+  keycloak:
+    image: auth-keycloak
+    build:
+      context: .
+      dockerfile: ./dockerfile-keycloak.yml
+    command: start --optimized --hostname-port=8080 --https-key-store-file=/opt/keycloak/conf/server.keystore
+
+    networks:
+      postgres-net:
+
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak
+      KC_DB_USERNAME: spay
+      KC_DB_PASSWORD: thesecret
+      KC_HOSTNAME: localhost
+      KEYCLOAK_HOSTNAME: localhost
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: thesecret
+      KC_HTTP_ENABLED: true
+
+    ports:
+      - 8080:8443
+
+    volumes:
+      - KC_DATA:/opt/keycloak
+
+    depends_on:
+      - postgres
+
+  # spay:
+  #   image: spay:latest
+  #   build:
+  #     context: ../
+  #     dockerfile: dockerfile
+  #   restart: always
+
+  #   ports:
+  #     - "3000:3000"
+
+  #   networks:
+  #     postgres-net:
+
+  #   environment:
+  #     PORT_API: 3000
+  #     KEYCLOAK_HOST: https://keycloak:8443
+  #     KEYCLOAK_CLIENT_ID: sikem-payment-admin
+  #     KEYCLOAK_CLIENT_SECRET: m3okDSN9JtBsn2CWLDwi46r5fut0smmq
+  #     KEYCLOAK_CLIENT_REALM: master
+  #     DB_PROVIDER: pg
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_NAME: spay
+  #     DB_USER: spay
+  #     DB_PASS: thesecret
+  #     DB_INIT: true
+
+  #   volumes:
+  #     - SPAY_DATA:/dist/updloads
+
+  #   depends_on:
+  #     - postgres
+  #     - keycloak
+
+networks:
+  postgres-net:
+
+volumes:
+  PG_DATA:
+  PGADMIN_DATA:
+  KC_DATA:
+  # SPAY_DATA:

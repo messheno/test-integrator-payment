@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
@@ -29,13 +30,13 @@ type ResUserAPIFetchSuccess struct {
 }
 
 // Fetch
-// @Summary      	Fetch all shop paginate
+// @Summary      	Fetch all service paginate
 // @Description  	Récuperation des boutiques paginer
 // @Tags         	Users
 // @Product       	json
 // @response      	200 {object} ResUserAPIFetchSuccess
 // @response      	400 {object} models.ResFailure
-// @Router       	/api/shops/ [get]
+// @Router       	/api/services/ [get]
 func (u *UserApiRessource) Fetch() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		resp, ok := c.Get("RESP").(*models.ResponseAPI[interface{}])
@@ -43,7 +44,7 @@ func (u *UserApiRessource) Fetch() echo.HandlerFunc {
 			resp = models.NewResponseAPI[interface{}]()
 		}
 
-		claims, ok := c.Get("JWT_CLAIMS").(models.GrantedData)
+		claims, ok := c.Get("JWT_CLAIMS").(jwt.MapClaims)
 		if !ok {
 			err := fmt.Errorf("authentification obligatoire")
 			resp.SetStatus(http.StatusUnauthorized)
@@ -58,10 +59,10 @@ func (u *UserApiRessource) Fetch() echo.HandlerFunc {
 
 		// Récuperation de l'utilisateur
 		loginUser := models.UserModel{}
-		loginUser.AuthId = claims.Claims["sub"].(string)
+		loginUser.AuthId = claims["sub"].(string)
 
 		result := db.
-			Preload("ShopPermissions").
+			Preload("ServicePermissions").
 			Where(&loginUser).First(&loginUser)
 		if result.Error != nil {
 			log.Error().Err(result.Error).Msgf("")
@@ -94,11 +95,11 @@ func (u *UserApiRessource) Fetch() echo.HandlerFunc {
 			loginUser,
 			&users,
 			fetchParams{
-				FilterShop: c.QueryParam("filter-shop"),
-				Orders:     orders,
-				Query:      query,
-				Limit:      limit,
-				Offset:     offset,
+				FilterService: c.QueryParam("filter-service"),
+				Orders:        orders,
+				Query:         query,
+				Limit:         limit,
+				Offset:        offset,
 			},
 			&count,
 		)
@@ -130,16 +131,16 @@ func fetchRestricted(reqDb *gorm.DB, db *gorm.DB, loginUser models.UserModel) (*
 	if loginUser.Role == models.USER_MERCHANT {
 		ids := []string{}
 
-		for _, perm := range loginUser.ShopPermissions {
-			if loginUser.IsShopGrant(perm.ShopId, models.SHOP_MANAGER) {
-				ids = append(ids, perm.ShopId)
+		for _, perm := range loginUser.ServicePermissions {
+			if loginUser.IsServiceGrant(perm.ServiceId, models.SERVICE_MANAGER) {
+				ids = append(ids, perm.ServiceId)
 			}
 		}
 
-		perms := []models.ShopPermissionModel{}
+		perms := []models.ServicePermissionModel{}
 
 		// Récuperation de toute les permission
-		result := db.Model(&models.ShopPermissionModel{}).Where("shop_id IN (?)", ids).Find(&perms)
+		result := db.Model(&models.ServicePermissionModel{}).Where("service_id IN (?)", ids).Find(&perms)
 		if result.Error != nil {
 			return nil, result.Error
 		}
@@ -164,14 +165,14 @@ func fetchQuery(reqDb *gorm.DB, query string) *gorm.DB {
 	return reqDb
 }
 
-func fetchFilterShop(reqDb *gorm.DB, db *gorm.DB, filter string) (*gorm.DB, error) {
+func fetchFilterService(reqDb *gorm.DB, db *gorm.DB, filter string) (*gorm.DB, error) {
 	if len(filter) > 0 {
-		shop := models.ShopModel{}
+		service := models.ServiceModel{}
 
 		if id, err := uuid.FromString(filter); err != nil {
 			return nil, err
 		} else {
-			shop.ID = id.String()
+			service.ID = id.String()
 		}
 
 		// Connexion à la base de donnée
@@ -180,20 +181,20 @@ func fetchFilterShop(reqDb *gorm.DB, db *gorm.DB, filter string) (*gorm.DB, erro
 			return nil, err
 		}
 
-		resultShop := db.
-			Model(&models.ShopModel{}).
+		resultService := db.
+			Model(&models.ServiceModel{}).
 			Preload("Permissions").
-			Where("id = ?", shop.ID).
-			First(&shop)
+			Where("id = ?", service.ID).
+			First(&service)
 
-		if resultShop.Error != nil {
-			log.Error().Err(resultShop.Error).Msgf("")
-			return nil, resultShop.Error
+		if resultService.Error != nil {
+			log.Error().Err(resultService.Error).Msgf("")
+			return nil, resultService.Error
 		}
 
 		// Récuperation de la liste des id
 		idsUser := []string{}
-		for _, permission := range shop.Permissions {
+		for _, permission := range service.Permissions {
 			idsUser = append(idsUser, permission.UserId)
 		}
 
@@ -232,8 +233,8 @@ func fetchExec(
 	// Query
 	reqDb = fetchQuery(reqDb, params.Query)
 
-	// Filter by ShopId
-	reqDb, err = fetchFilterShop(reqDb, db, params.FilterShop)
+	// Filter by ServiceId
+	reqDb, err = fetchFilterService(reqDb, db, params.FilterService)
 	if err != nil {
 		return err
 	}
@@ -247,8 +248,8 @@ func fetchExec(
 	reqDb = fetchOrder(reqDb, params.Orders)
 
 	result = reqDb.
-		Preload("ShopPermissions").
-		Preload("ShopPermissions.Shop").
+		Preload("ServicePermissions").
+		Preload("ServicePermissions.Service").
 		Limit(int(params.Limit)).
 		Offset(int(params.Offset)).
 		Find(users)
@@ -260,9 +261,9 @@ func fetchExec(
 }
 
 type fetchParams struct {
-	FilterShop string
-	Orders     []string
-	Query      string
-	Limit      int
-	Offset     int
+	FilterService string
+	Orders        []string
+	Query         string
+	Limit         int
+	Offset        int
 }

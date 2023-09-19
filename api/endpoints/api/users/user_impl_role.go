@@ -51,7 +51,7 @@ func (u *UserApiRessource) ChangeRole() echo.HandlerFunc {
 			resp = models.NewResponseAPI[interface{}]()
 		}
 
-		claims, ok := c.Get("JWT_CLAIMS").(models.GrantedData)
+		claims, ok := c.Get("JWT_CLAIMS").(jwt.MapClaims)
 		if !ok {
 			err := fmt.Errorf("authentification obligatoire")
 			resp.SetStatus(http.StatusUnauthorized)
@@ -86,7 +86,7 @@ func (u *UserApiRessource) ChangeRole() echo.HandlerFunc {
 		}
 
 		// Récuperation de l'utilisateur actuel
-		userForUpdate, err := updateUserRole(claims.Claims, *data)
+		userForUpdate, err := updateUserRole(claims, *data)
 		if err != nil {
 			log.Error().Err(err).Msgf("")
 			return resp.SendError(c, err.Error(), models.TransformErr(err))

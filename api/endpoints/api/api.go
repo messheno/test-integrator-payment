@@ -1,7 +1,7 @@
 package api
 
 import (
-	"spay/endpoints/api/shops"
+	"spay/endpoints/api/services"
 	"spay/endpoints/api/users"
 
 	"github.com/labstack/echo/v4"
@@ -14,11 +14,7 @@ func AttachAPI(server *echo.Echo, log *zerolog.Logger) {
 		// Users Endpoints: /api/users
 		users.AttachAPI(apiServer)
 
-		// Shops Endpoints: /api/shops
-		shops.AttachAPI(apiServer)
-
-		// Shop Permissions Endpoints: /api/shop-permissions
-		// Providers Endpoints: /api/providers
-		// Transactions Endpoints: /api/transactions
+		// Services Endpoints: /api/services
+		services.AttachAPI(apiServer)
 	}
 }

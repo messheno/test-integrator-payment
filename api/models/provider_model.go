@@ -70,3 +70,8 @@ type ProviderModel struct {
 
 	Transactions []TransactionModel `json:"transactions,omitempty" form:"transactions" gorm:"foreignKey:ProviderId"`
 }
+
+// TableName changement du nom de la table
+func (ProviderModel) TableName() string {
+	return "providers"
+}

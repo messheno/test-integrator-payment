@@ -83,7 +83,7 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  models.ShopModel:
+  models.ServiceModel:
     properties:
       amount:
         type: number
@@ -106,7 +106,7 @@ definitions:
       permissions:
         description: Liste de permission des utilisateurs
         items:
-          $ref: '#/definitions/models.ShopPermissionModel'
+          $ref: '#/definitions/models.ServicePermissionModel'
         type: array
       site_web:
         type: string
@@ -121,7 +121,7 @@ definitions:
     - description
     - name
     type: object
-  models.ShopPermissionModel:
+  models.ServicePermissionModel:
     properties:
       created_at:
         type: string
@@ -129,10 +129,10 @@ definitions:
         type: string
       role:
         type: integer
-      shop:
-        $ref: '#/definitions/models.ShopModel'
-      shop_id:
-        description: Shop
+      service:
+        $ref: '#/definitions/models.ServiceModel'
+      service_id:
+        description: Service
         type: string
       updated_at:
         type: string
@@ -174,10 +174,10 @@ definitions:
       reference_id:
         description: Réference
         type: string
-      shop:
-        $ref: '#/definitions/models.ShopModel'
-      shop_id:
-        description: Shop
+      service:
+        $ref: '#/definitions/models.ServiceModel'
+      service_id:
+        description: Service
         type: string
       updated_at:
         type: string
@@ -190,8 +190,8 @@ definitions:
     - provider
     - provider_id
     - reference_id
-    - shop
-    - shop_id
+    - service
+    - service_id
     type: object
   models.UserModel:
     properties:
@@ -218,9 +218,9 @@ definitions:
       role:
         description: Role
         type: integer
-      shop_permissions:
+      service_permissions:
         items:
-          $ref: '#/definitions/models.ShopPermissionModel'
+          $ref: '#/definitions/models.ServicePermissionModel'
         type: array
       updated_at:
         type: string
@@ -229,12 +229,12 @@ definitions:
     - first_name
     - last_name
     type: object
-  shops.ResShopAPICreateSuccess:
+  services.ResServiceAPICreateSuccess:
     properties:
       data:
         properties:
-          shop:
-            $ref: '#/definitions/models.ShopModel'
+          service:
+            $ref: '#/definitions/models.ServiceModel'
           user:
             $ref: '#/definitions/models.UserModel'
         type: object
@@ -249,14 +249,14 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIDeleteSuccess:
+  services.ResServiceAPIDeleteSuccess:
     properties:
       data:
         properties:
           deleted:
             type: boolean
-          shop:
-            $ref: '#/definitions/models.ShopModel'
+          service:
+            $ref: '#/definitions/models.ServiceModel'
         type: object
       is_error:
         type: boolean
@@ -269,15 +269,15 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIFetchSuccess:
+  services.ResServiceAPIFetchSuccess:
     properties:
       data:
         properties:
           pagination:
             $ref: '#/definitions/models.PaginationModel'
-          shops:
+          services:
             items:
-              $ref: '#/definitions/models.ShopModel'
+              $ref: '#/definitions/models.ServiceModel'
             type: array
         type: object
       is_error:
@@ -291,7 +291,7 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIGenClientSuccess:
+  services.ResServiceAPIGenClientSuccess:
     properties:
       data:
         properties:
@@ -311,7 +311,7 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIGetClientSuccess:
+  services.ResServiceAPIGetClientSuccess:
     properties:
       data:
         properties:
@@ -331,12 +331,12 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIGetSuccess:
+  services.ResServiceAPIGetSuccess:
     properties:
       data:
         properties:
-          shop:
-            $ref: '#/definitions/models.ShopModel'
+          service:
+            $ref: '#/definitions/models.ServiceModel'
         type: object
       is_error:
         type: boolean
@@ -349,12 +349,12 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopAPIUpdateSuccess:
+  services.ResServiceAPIUpdateSuccess:
     properties:
       data:
         properties:
-          shop:
-            $ref: '#/definitions/models.ShopModel'
+          service:
+            $ref: '#/definitions/models.ServiceModel'
         type: object
       is_error:
         type: boolean
@@ -367,14 +367,14 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopPermissionAPIAddSuccess:
+  services.ResServicePermissionAPIAddSuccess:
     properties:
       data:
         properties:
-          shop:
-            $ref: '#/definitions/models.ShopModel'
-          shop_permission:
-            $ref: '#/definitions/models.ShopPermissionModel'
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+          servive_permission:
+            $ref: '#/definitions/models.ServicePermissionModel'
           user:
             $ref: '#/definitions/models.UserModel'
         type: object
@@ -389,13 +389,13 @@ definitions:
       time_elapsed:
         type: string
     type: object
-  shops.ResShopPermissionAPIFetchSuccess:
+  services.ResServicePermissionAPIFetchSuccess:
     properties:
       data:
         properties:
-          shop_permissions:
+          service_permissions:
             items:
-              $ref: '#/definitions/models.ShopPermissionModel'
+              $ref: '#/definitions/models.ServicePermissionModel'
             type: array
         type: object
       is_error:
@@ -545,7 +545,7 @@ info:
   title: Sikem Payment API
   version: 0.0.2
 paths:
-  /api/shops/:
+  /api/services/:
     get:
       description: Récuperation des boutiques paginer
       responses:
@@ -557,7 +557,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Fetch all shop paginate
+      summary: Fetch all service paginate
       tags:
       - Users
     post:
@@ -595,43 +595,43 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPICreateSuccess'
+            $ref: '#/definitions/services.ResServiceAPICreateSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Add new shop
+      summary: Add new service
       tags:
-      - Shops
-  /api/shops/:id/:
+      - Services
+  /api/services/:id/:
     delete:
       description: Suppression de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPIDeleteSuccess'
+            $ref: '#/definitions/services.ResServiceAPIDeleteSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Delete shop
+      summary: Delete service
       tags:
-      - Shops
+      - Services
     get:
       description: Récuperation des informations de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPIGetSuccess'
+            $ref: '#/definitions/services.ResServiceAPIGetSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Get shop data
+      summary: Get service data
       tags:
-      - Shops
+      - Services
     put:
       consumes:
       - application/json
@@ -660,74 +660,74 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPIUpdateSuccess'
+            $ref: '#/definitions/services.ResServiceAPIUpdateSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: UpdateInfo shop information
+      summary: UpdateInfo service information
       tags:
-      - Shops
-  /api/shops/:id/permissions/:
+      - Services
+  /api/services/:id/permissions/:
     get:
       description: Récuperation des permissions de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopPermissionAPIFetchSuccess'
+            $ref: '#/definitions/services.ResServicePermissionAPIFetchSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Fetch shop permissions
+      summary: Fetch service permissions
       tags:
-      - Shop Permissions
-  /api/shops/:id/permissions/add:
+      - Service Permissions
+  /api/services/:id/permissions/add:
     post:
       description: Récuperation des permissions de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopPermissionAPIAddSuccess'
+            $ref: '#/definitions/services.ResServicePermissionAPIAddSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Add user to shop
+      summary: Add user to service
       tags:
       - Ajout d'un utilisateurs à la boutique
-  /api/shops/:id/regenerate-client:
+  /api/services/:id/regenerate-client:
     post:
       description: Régéneration du client de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPIGenClientSuccess'
+            $ref: '#/definitions/services.ResServiceAPIGenClientSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Regeneration Client shop data
+      summary: Regeneration Client service data
       tags:
-      - Shops
-  /api/shops/:id/show-client:
+      - Services
+  /api/services/:id/show-client:
     get:
       description: Récuperation des informations client de la boutique
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/shops.ResShopAPIGetClientSuccess'
+            $ref: '#/definitions/services.ResServiceAPIGetClientSuccess'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ResFailure'
-      summary: Get Client shop data
+      summary: Get Client service data
       tags:
-      - Shops
+      - Services
   /api/users/:
     post:
       consumes:

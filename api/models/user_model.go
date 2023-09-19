@@ -22,8 +22,13 @@ type UserModel struct {
 	Country     string `json:"country" form:"country" gorm:"index"`
 
 	// Role
-	Role            UserRole              `json:"role" form:"role" gorm:"type:text" validate:"-"`
-	ShopPermissions []ShopPermissionModel `json:"shop_permissions" form:"shop_permissions" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE;"`
+	Role               UserRole                 `json:"role" form:"role" gorm:"type:text" validate:"-"`
+	ServicePermissions []ServicePermissionModel `json:"service_permissions" form:"service_permissions" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE;"`
+}
+
+// TableName changement du nom de la table
+func (UserModel) TableName() string {
+	return "users"
 }
 
 func (u *UserModel) BeforeCreate(tx *gorm.DB) (err error) {
@@ -56,18 +61,18 @@ func (u *UserModel) IsGrant(role UserRole) bool {
 	return false
 }
 
-func (u *UserModel) IsShopGrant(shopId string, role ShopRole) bool {
+func (u *UserModel) IsServiceGrant(serviceId string, role ServiceRole) bool {
 	if u.Role == USER_ADMIN {
 		return true
 	}
 
-	for _, perm := range u.ShopPermissions {
-		if shopId == perm.ShopId {
-			if perm.Role == SHOP_ADMIN || perm.Role == role {
+	for _, perm := range u.ServicePermissions {
+		if serviceId == perm.ServiceId {
+			if perm.Role == SERVICE_ADMIN || perm.Role == role {
 				return true
 			}
 
-			if role == SHOP_MANAGER && perm.Role == SHOP_DEV {
+			if role == SERVICE_MANAGER && perm.Role == SERVICE_DEV {
 				return true
 			}
 		}

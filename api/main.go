@@ -15,7 +15,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-const serviceName = "quantech-payment"
+const serviceName = "sikem-payment"
 
 // @title Sikem Payment API
 // @version 0.0.2

@@ -76,7 +76,7 @@ Cette architecture est basée sur les exigences fournies precedement et suppose 
 - Golang (API)
 - ReactJs (Frontend)
 - PostgreSQL (Base de donnée)
-- Keycloak envisager mais pas utilisé pour cette demo (Système de gestion d'identité et d'accès)
+- Keycloak (Système de gestion d'identité et d'accès)
 
 ## Architecture technique
 
@@ -86,6 +86,9 @@ Cette architecture est basée sur les exigences fournies precedement et suppose 
 2. Backend avec Go
     - Nous utilisons Go pour créer l'API de paiement autonome qui permet aux applications externes d'initier des paiements et gère les paiements en cours.
     - Go est un excellent choix en raison de sa performance, de sa simplicité et de sa concurrence, ce qui le rend adapté à la gestion des transactions en temps réel.
+3. Serveur d'identité et d'autorisation
+    - Nous utilisons Keycloak pour la gestion efficace des utilisateurs
+    - Keycloak est open source et sécurisé, il facilite le travail et apporte un très bon niveau de sécurité
 3. Base de Données PostgreSQL
     - Nous utilisons PostgreSQL comme base de données pour stocker les informations sur les transactions en cours, les utilisateurs et les comptes.
     - PostgreSQL offre des fonctionnalités avancées de gestion des données, de sécurité et de performances.

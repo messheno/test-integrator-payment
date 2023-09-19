@@ -68,8 +68,8 @@ func GetDB() (*gorm.DB, error) {
 func CreateUpdateTable(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&UserModel{},
-		&ShopModel{},
-		&ShopPermissionModel{},
+		&ServiceModel{},
+		&ServicePermissionModel{},
 		&ProviderModel{},
 		&TransactionModel{},
 	)
@@ -78,8 +78,8 @@ func CreateUpdateTable(db *gorm.DB) error {
 func DropTable(db *gorm.DB) error {
 	return db.Migrator().DropTable(
 		&UserModel{},
-		&ShopModel{},
-		&ShopPermissionModel{},
+		&ServiceModel{},
+		&ServicePermissionModel{},
 		&ProviderModel{},
 		&TransactionModel{},
 	)

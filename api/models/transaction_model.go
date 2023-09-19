@@ -15,11 +15,16 @@ type TransactionModel struct {
 	ProviderId string        `json:"provider_id" form:"provider_id" validate:"required" gorm:"index"`
 	Provider   ProviderModel `json:"provider" form:"provider" validate:"required"`
 
-	// Shop
-	ShopId string    `json:"shop_id" form:"shop_id" validate:"required" gorm:"index"`
-	Shop   ShopModel `json:"shop" form:"shop" validate:"required"`
+	// Service
+	ServiceId string       `json:"service_id" form:"service_id" validate:"required" gorm:"index"`
+	Service   ServiceModel `json:"service" form:"service" validate:"required"`
 
 	// Réference
 	ReferenceId string `json:"reference_id" form:"reference_id" validate:"required"` // Id facture
 	Currency    string `json:"currency" form:"currency" validate:"required"`
+}
+
+// TableName changement du nom de la table
+func (TransactionModel) TableName() string {
+	return "transactions"
 }

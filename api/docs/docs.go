@@ -25,13 +25,13 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/shops/": {
+        "/api/services/": {
             "get": {
                 "description": "Récuperation des boutiques paginer",
                 "tags": [
                     "Users"
                 ],
-                "summary": "Fetch all shop paginate",
+                "summary": "Fetch all service paginate",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -56,9 +56,9 @@ const docTemplate = `{
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "Add new shop",
+                "summary": "Add new service",
                 "parameters": [
                     {
                         "type": "string",
@@ -98,7 +98,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPICreateSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPICreateSuccess"
                         }
                     },
                     "400": {
@@ -110,18 +110,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/shops/:id/": {
+        "/api/services/:id/": {
             "get": {
                 "description": "Récuperation des informations de la boutique",
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "Get shop data",
+                "summary": "Get service data",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPIGetSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPIGetSuccess"
                         }
                     },
                     "400": {
@@ -141,9 +141,9 @@ const docTemplate = `{
                     "multipart/form-data"
                 ],
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "UpdateInfo shop information",
+                "summary": "UpdateInfo service information",
                 "parameters": [
                     {
                         "type": "string",
@@ -174,7 +174,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPIUpdateSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPIUpdateSuccess"
                         }
                     },
                     "400": {
@@ -188,14 +188,14 @@ const docTemplate = `{
             "delete": {
                 "description": "Suppression de la boutique",
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "Delete shop",
+                "summary": "Delete service",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPIDeleteSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPIDeleteSuccess"
                         }
                     },
                     "400": {
@@ -207,18 +207,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/shops/:id/permissions/": {
+        "/api/services/:id/permissions/": {
             "get": {
                 "description": "Récuperation des permissions de la boutique",
                 "tags": [
-                    "Shop Permissions"
+                    "Service Permissions"
                 ],
-                "summary": "Fetch shop permissions",
+                "summary": "Fetch service permissions",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopPermissionAPIFetchSuccess"
+                            "$ref": "#/definitions/services.ResServicePermissionAPIFetchSuccess"
                         }
                     },
                     "400": {
@@ -230,18 +230,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/shops/:id/permissions/add": {
+        "/api/services/:id/permissions/add": {
             "post": {
                 "description": "Récuperation des permissions de la boutique",
                 "tags": [
                     "Ajout d'un utilisateurs à la boutique"
                 ],
-                "summary": "Add user to shop",
+                "summary": "Add user to service",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopPermissionAPIAddSuccess"
+                            "$ref": "#/definitions/services.ResServicePermissionAPIAddSuccess"
                         }
                     },
                     "400": {
@@ -253,18 +253,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/shops/:id/regenerate-client": {
+        "/api/services/:id/regenerate-client": {
             "post": {
                 "description": "Régéneration du client de la boutique",
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "Regeneration Client shop data",
+                "summary": "Regeneration Client service data",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPIGenClientSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPIGenClientSuccess"
                         }
                     },
                     "400": {
@@ -276,18 +276,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/shops/:id/show-client": {
+        "/api/services/:id/show-client": {
             "get": {
                 "description": "Récuperation des informations client de la boutique",
                 "tags": [
-                    "Shops"
+                    "Services"
                 ],
-                "summary": "Get Client shop data",
+                "summary": "Get Client service data",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/shops.ResShopAPIGetClientSuccess"
+                            "$ref": "#/definitions/services.ResServiceAPIGetClientSuccess"
                         }
                     },
                     "400": {
@@ -703,7 +703,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ShopModel": {
+        "models.ServiceModel": {
             "type": "object",
             "required": [
                 "description",
@@ -741,7 +741,7 @@ const docTemplate = `{
                     "description": "Liste de permission des utilisateurs",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.ShopPermissionModel"
+                        "$ref": "#/definitions/models.ServicePermissionModel"
                     }
                 },
                 "site_web": {
@@ -759,7 +759,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ShopPermissionModel": {
+        "models.ServicePermissionModel": {
             "type": "object",
             "required": [
                 "role"
@@ -774,11 +774,11 @@ const docTemplate = `{
                 "role": {
                     "type": "integer"
                 },
-                "shop": {
-                    "$ref": "#/definitions/models.ShopModel"
+                "service": {
+                    "$ref": "#/definitions/models.ServiceModel"
                 },
-                "shop_id": {
-                    "description": "Shop",
+                "service_id": {
+                    "description": "Service",
                     "type": "string"
                 },
                 "updated_at": {
@@ -804,8 +804,8 @@ const docTemplate = `{
                 "provider",
                 "provider_id",
                 "reference_id",
-                "shop",
-                "shop_id"
+                "service",
+                "service_id"
             ],
             "properties": {
                 "amount": {
@@ -848,11 +848,11 @@ const docTemplate = `{
                     "description": "Réference",
                     "type": "string"
                 },
-                "shop": {
-                    "$ref": "#/definitions/models.ShopModel"
+                "service": {
+                    "$ref": "#/definitions/models.ServiceModel"
                 },
-                "shop_id": {
-                    "description": "Shop",
+                "service_id": {
+                    "description": "Service",
                     "type": "string"
                 },
                 "updated_at": {
@@ -901,10 +901,10 @@ const docTemplate = `{
                     "description": "Role",
                     "type": "integer"
                 },
-                "shop_permissions": {
+                "service_permissions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.ShopPermissionModel"
+                        "$ref": "#/definitions/models.ServicePermissionModel"
                     }
                 },
                 "updated_at": {
@@ -912,14 +912,14 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPICreateSuccess": {
+        "services.ResServiceAPICreateSuccess": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object",
                     "properties": {
-                        "shop": {
-                            "$ref": "#/definitions/models.ShopModel"
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
                         },
                         "user": {
                             "$ref": "#/definitions/models.UserModel"
@@ -943,7 +943,7 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIDeleteSuccess": {
+        "services.ResServiceAPIDeleteSuccess": {
             "type": "object",
             "properties": {
                 "data": {
@@ -952,8 +952,8 @@ const docTemplate = `{
                         "deleted": {
                             "type": "boolean"
                         },
-                        "shop": {
-                            "$ref": "#/definitions/models.ShopModel"
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
                         }
                     }
                 },
@@ -974,7 +974,7 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIFetchSuccess": {
+        "services.ResServiceAPIFetchSuccess": {
             "type": "object",
             "properties": {
                 "data": {
@@ -983,10 +983,10 @@ const docTemplate = `{
                         "pagination": {
                             "$ref": "#/definitions/models.PaginationModel"
                         },
-                        "shops": {
+                        "services": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.ShopModel"
+                                "$ref": "#/definitions/models.ServiceModel"
                             }
                         }
                     }
@@ -1008,7 +1008,7 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIGenClientSuccess": {
+        "services.ResServiceAPIGenClientSuccess": {
             "type": "object",
             "properties": {
                 "data": {
@@ -1039,7 +1039,7 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIGetClientSuccess": {
+        "services.ResServiceAPIGetClientSuccess": {
             "type": "object",
             "properties": {
                 "data": {
@@ -1070,14 +1070,14 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIGetSuccess": {
+        "services.ResServiceAPIGetSuccess": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object",
                     "properties": {
-                        "shop": {
-                            "$ref": "#/definitions/models.ShopModel"
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
                         }
                     }
                 },
@@ -1098,14 +1098,14 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopAPIUpdateSuccess": {
+        "services.ResServiceAPIUpdateSuccess": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object",
                     "properties": {
-                        "shop": {
-                            "$ref": "#/definitions/models.ShopModel"
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
                         }
                     }
                 },
@@ -1126,17 +1126,17 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopPermissionAPIAddSuccess": {
+        "services.ResServicePermissionAPIAddSuccess": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object",
                     "properties": {
-                        "shop": {
-                            "$ref": "#/definitions/models.ShopModel"
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
                         },
-                        "shop_permission": {
-                            "$ref": "#/definitions/models.ShopPermissionModel"
+                        "servive_permission": {
+                            "$ref": "#/definitions/models.ServicePermissionModel"
                         },
                         "user": {
                             "$ref": "#/definitions/models.UserModel"
@@ -1160,16 +1160,16 @@ const docTemplate = `{
                 }
             }
         },
-        "shops.ResShopPermissionAPIFetchSuccess": {
+        "services.ResServicePermissionAPIFetchSuccess": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "object",
                     "properties": {
-                        "shop_permissions": {
+                        "service_permissions": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.ShopPermissionModel"
+                                "$ref": "#/definitions/models.ServicePermissionModel"
                             }
                         }
                     }
