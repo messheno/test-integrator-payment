@@ -409,6 +409,186 @@ definitions:
       time_elapsed:
         type: string
     type: object
+  transactions.ResServiceAPICreateSuccess:
+    properties:
+      data:
+        properties:
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServiceAPIDeleteSuccess:
+    properties:
+      data:
+        properties:
+          deleted:
+            type: boolean
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServiceAPIGenClientSuccess:
+    properties:
+      data:
+        properties:
+          client_id:
+            type: string
+          client_key:
+            type: string
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServiceAPIGetSuccess:
+    properties:
+      data:
+        properties:
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServiceAPIUpdateSuccess:
+    properties:
+      data:
+        properties:
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServicePermissionAPIAddSuccess:
+    properties:
+      data:
+        properties:
+          service:
+            $ref: '#/definitions/models.ServiceModel'
+          servive_permission:
+            $ref: '#/definitions/models.ServicePermissionModel'
+          user:
+            $ref: '#/definitions/models.UserModel'
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResServicePermissionAPIFetchSuccess:
+    properties:
+      data:
+        properties:
+          service_permissions:
+            items:
+              $ref: '#/definitions/models.ServicePermissionModel'
+            type: array
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResTransactionAPIFetchSuccess:
+    properties:
+      data:
+        properties:
+          pagination:
+            $ref: '#/definitions/models.PaginationModel'
+          transactions:
+            items:
+              $ref: '#/definitions/models.TransactionModel'
+            type: array
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
+  transactions.ResTransactionAPIGetClientSuccess:
+    properties:
+      data:
+        properties:
+          client_id:
+            type: string
+          client_key:
+            type: string
+        type: object
+      is_error:
+        type: boolean
+      message:
+        type: string
+      request_date:
+        type: string
+      status:
+        type: integer
+      time_elapsed:
+        type: string
+    type: object
   users.ResUserAPICreateSuccess:
     properties:
       data:
@@ -595,7 +775,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPICreateSuccess'
+            $ref: '#/definitions/transactions.ResServiceAPICreateSuccess'
         "400":
           description: Bad Request
           schema:
@@ -610,7 +790,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPIDeleteSuccess'
+            $ref: '#/definitions/transactions.ResServiceAPIDeleteSuccess'
         "400":
           description: Bad Request
           schema:
@@ -624,7 +804,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPIGetSuccess'
+            $ref: '#/definitions/transactions.ResServiceAPIGetSuccess'
         "400":
           description: Bad Request
           schema:
@@ -660,7 +840,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPIUpdateSuccess'
+            $ref: '#/definitions/transactions.ResServiceAPIUpdateSuccess'
         "400":
           description: Bad Request
           schema:
@@ -675,7 +855,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServicePermissionAPIFetchSuccess'
+            $ref: '#/definitions/transactions.ResServicePermissionAPIFetchSuccess'
         "400":
           description: Bad Request
           schema:
@@ -690,7 +870,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServicePermissionAPIAddSuccess'
+            $ref: '#/definitions/transactions.ResServicePermissionAPIAddSuccess'
         "400":
           description: Bad Request
           schema:
@@ -705,7 +885,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPIGenClientSuccess'
+            $ref: '#/definitions/transactions.ResServiceAPIGenClientSuccess'
         "400":
           description: Bad Request
           schema:
@@ -720,7 +900,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.ResServiceAPIGetClientSuccess'
+            $ref: '#/definitions/transactions.ResTransactionAPIGetClientSuccess'
         "400":
           description: Bad Request
           schema:
@@ -728,6 +908,21 @@ paths:
       summary: Get Client service data
       tags:
       - Services
+  /api/transactions/:
+    get:
+      description: Récuperation des transactions paginer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/transactions.ResTransactionAPIFetchSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ResFailure'
+      summary: Fetch all transaction paginate
+      tags:
+      - Transactions
   /api/users/:
     post:
       consumes:

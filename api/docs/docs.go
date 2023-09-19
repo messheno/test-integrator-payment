@@ -98,7 +98,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPICreateSuccess"
+                            "$ref": "#/definitions/transactions.ResServiceAPICreateSuccess"
                         }
                     },
                     "400": {
@@ -121,7 +121,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPIGetSuccess"
+                            "$ref": "#/definitions/transactions.ResServiceAPIGetSuccess"
                         }
                     },
                     "400": {
@@ -174,7 +174,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPIUpdateSuccess"
+                            "$ref": "#/definitions/transactions.ResServiceAPIUpdateSuccess"
                         }
                     },
                     "400": {
@@ -195,7 +195,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPIDeleteSuccess"
+                            "$ref": "#/definitions/transactions.ResServiceAPIDeleteSuccess"
                         }
                     },
                     "400": {
@@ -218,7 +218,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServicePermissionAPIFetchSuccess"
+                            "$ref": "#/definitions/transactions.ResServicePermissionAPIFetchSuccess"
                         }
                     },
                     "400": {
@@ -241,7 +241,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServicePermissionAPIAddSuccess"
+                            "$ref": "#/definitions/transactions.ResServicePermissionAPIAddSuccess"
                         }
                     },
                     "400": {
@@ -264,7 +264,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPIGenClientSuccess"
+                            "$ref": "#/definitions/transactions.ResServiceAPIGenClientSuccess"
                         }
                     },
                     "400": {
@@ -287,7 +287,30 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.ResServiceAPIGetClientSuccess"
+                            "$ref": "#/definitions/transactions.ResTransactionAPIGetClientSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transactions/": {
+            "get": {
+                "description": "Récuperation des transactions paginer",
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Fetch all transaction paginate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/transactions.ResTransactionAPIFetchSuccess"
                         }
                     },
                     "400": {
@@ -1171,6 +1194,285 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.ServicePermissionModel"
                             }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServiceAPICreateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServiceAPIDeleteSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "deleted": {
+                            "type": "boolean"
+                        },
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServiceAPIGenClientSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "client_id": {
+                            "type": "string"
+                        },
+                        "client_key": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServiceAPIGetSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServiceAPIUpdateSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServicePermissionAPIAddSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "service": {
+                            "$ref": "#/definitions/models.ServiceModel"
+                        },
+                        "servive_permission": {
+                            "$ref": "#/definitions/models.ServicePermissionModel"
+                        },
+                        "user": {
+                            "$ref": "#/definitions/models.UserModel"
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResServicePermissionAPIFetchSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "service_permissions": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ServicePermissionModel"
+                            }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResTransactionAPIFetchSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "pagination": {
+                            "$ref": "#/definitions/models.PaginationModel"
+                        },
+                        "transactions": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TransactionModel"
+                            }
+                        }
+                    }
+                },
+                "is_error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "time_elapsed": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactions.ResTransactionAPIGetClientSuccess": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "client_id": {
+                            "type": "string"
+                        },
+                        "client_key": {
+                            "type": "string"
                         }
                     }
                 },
